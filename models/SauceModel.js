@@ -5,7 +5,7 @@ const sauceSchema = mongoose.Schema({
     manufacturer: { type: String, required: true },
     description: { type: String, required: true },
     mainPepper: { type: String, required: true },
-    heat: { type: Number, required: true }
+    heat: { type: String, required: true }
 });
 
 // EXPORT sauce schema

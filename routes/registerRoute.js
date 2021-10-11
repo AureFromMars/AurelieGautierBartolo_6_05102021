@@ -8,11 +8,6 @@ const authCtrl = require('../controllers/authCtrl');
 // Import password.js Middleware
 const password = require('../middleware/password');
 
-
-
-
-
-
 // Route register ENDPOINT
 registerRouter.post('/register', password, authCtrl.register);
 

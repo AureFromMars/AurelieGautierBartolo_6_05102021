@@ -7,7 +7,7 @@ exports.createSauce = (req, res, next) => {
     delete sauceObject._id;
     const sauce = new Sauce({
         ...sauceObject,
-        imageUrl: `${req.protocol}://${get('host')}/images/${req.file.filname}`// Voir si on récupère bien le host pour la prod éventuelle #################################################################
+        imageUrl: `${req.protocol}://${get('host')}/images/${req.file.filename}`// Voir si on récupère bien le host pour la prod éventuelle #################################################################
     });
     sauce.save()
     .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))// Callback that returns the promise

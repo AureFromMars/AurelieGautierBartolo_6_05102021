@@ -93,6 +93,7 @@ npm init
 - ajout du package crypto-js/hmac-sha256 pour chiffrer l'email avec un haut niveau de sécurité (résultat très long avec 256)
 - ajout du package password-validator pour obliger à créer un mot de passe fort
 - ajout du package mongoose-unique-validator pour clarifier les erreurs de validation
+- ajout du package jsonwebtoken pour créer des tokens d'authentification
 
 # Installer la Base de données
 1. Installer MongoDB Atlas

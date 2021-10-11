@@ -34,8 +34,8 @@ app.use(morgan('dev'));
 // Import registration route
 const registerRouter = require('./routes/registerRoute');
 
-// Import sauce route // Déjà déclaré... dans ???
-// const sauceRouter = require('./routes/saucesRoute');
+// Import sauce route
+const sauceRouter = require('./routes/saucesRoute');
 
 // Import db connexion
 const db = require('./db/db');
@@ -77,8 +77,7 @@ app.post('/api/auth/login', (req, res, next) => {//application qui reçoit la re
 app.use('/api/auth', registerRouter);
 
 /*************** CRUD SAUCES = CREATE, READ, UPDATE, DELETE ***************/
-const sauceRouter = require('./routes/saucesRoute');
-
+app.use('api/sauces', sauceRouter)
 // POST a new sauce
 app.post('/api/sauces', (req, res, next) => {
     delete req.body._id;// enlever l'id avant de copier l'objet
@@ -87,12 +86,6 @@ app.post('/api/sauces', (req, res, next) => {
         ...req.body/// Raccourci pour remplacer tous les types de champs dans Thing.js de type title: req.body.title
     });
     sauce.save()// Pour enregistrer l'objet dans la base
-
-    // const image = new Image({
-    //     // Ajouter du code ici pour récupérer l'image et la stocker quelque part !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // });
-    // image.save()// Pour enregistrer l'image dans la base : cf. https://appdividend.com/2019/02/14/node-express-image-upload-and-resize-tutorial-example/
-    
 
     .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))// Callback qui retourne une promise, et envoyer une res sinon expiration de requête
     .catch(error => res.status(400).json({ error }));// Callback pour récupérer l'erreur avec code 400 et json avec erreur
