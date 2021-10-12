@@ -13,8 +13,8 @@ const port = normalizePort(process.env.PORT);// Normaliser le port dont le numé
 app.set('port', port);// Créer, setter le port dans app.js
 
 const server = http.createServer(app);// Fonction d'appel d'app.js
-const address = server.address();// DOUBLON A GLOBALISER
-const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;// DOUBLON A GLOBALISER
+const address = server.address();
+const bind = typeof address === 'string' ? 'pipe ' + address : 'port: ' + port;
 
 const errorHandler = error => {//Rechercher et gérer les erreurs
     if (error.syscall !== 'listen') {throw error;}

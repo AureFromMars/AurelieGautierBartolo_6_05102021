@@ -10,6 +10,12 @@
  * MIDDLEWARE = app.use
  * next();// QUE DANS LE MIDDLEWARE !
  * 
+ * 100+ ➡ Information
+ * 200+ ➡ Succès
+ * 300+ ➡ Redirection
+ * 400+ ➡ Erreur client
+ * 500+ ➡ Erreur serveur
+ * 
  * 200 = 
  * 201 = pour les requêtes de création d'une nouvelle ressource
  * 400 = 
@@ -17,98 +23,59 @@
  * 
  * ******************/
 
-// Import Express (N.B. body parser included)
-const express = require('express');
+// Imports
+const express = require('express');// Express (N.B. body parser included)
 const app = express();
-
-// Import dotenv to create environment variables
-const dotenv = require('dotenv').config();
-
-// Import Sauce Model
-const Sauce = require('./models/SauceModel');
-
-// Import Morgan to have logs about HTTP middleware requests
-const morgan = require('morgan');
+const dotenv = require('dotenv').config();// dotenv to create environment variables // Utile ici ??????????????????????????????????
+const Sauce = require('./models/SauceModel');// Sauce Model
+const morgan = require('morgan');// Morgan to have logs about HTTP middleware requests
 app.use(morgan('dev'));
-
-// Import registration route
-const registerRouter = require('./routes/registerRoute');
-
-// Import sauce route
-const sauceRouter = require('./routes/saucesRoute');
-
-// Import db connexion
-const db = require('./db/db');
-
-// Import path Node module to have path from images
-const path = require('path');
-
-// Import cors to avoid declare headers
-const cors = require('cors');
+const authRouter = require('./routes/authRoute');// Registration route
+const sauceRouter = require('./routes/saucesRoute');// Sauce route
+const db = require('./db/db');// Db connexion
+const path = require('path');// Path Node module to have path from images
+const mongoose = require('mongoose');// Mongoose
+mongoose.set('debug', true);// Mongoose debugger
+const cors = require('cors');// Cors to avoid declare headers
 app.use(cors());
 app.options('*', cors());
-/*********** Authorisations headers */ // Pas utilse si app.use(cors());
-// app.use((req, res, next) => {//application qui reçoit la requête GET et la réponse de localhost:3000
-//     res.setHeader('Access-Control-Allow-Origin', '*');// Accéder à l'API depuis n'importe quelle origine
-//     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, text/html, application/xhtml+xml, application/xml;q=0.9, image/avif, image/webp, image/apng, */*;q=0.8, application/signed-exchange;v=b3;q=0.9');
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');// Requête GET et OPTIONS sans CROS // les autres avec prefetch // GET DELETE et OPTIONS n'envoient pas forcément des données // les autres de type POST avec envoi
-//     req.headers['Accept'] = 'application/json, text/plain, */*';
-//     req.headers['Content-Type'] = 'multipart/form-data';// Pour permettre l'upload de l'image
-//     next();
-// });
 
-// Import Mongoose debugger
-const mongoose = require('mongoose');// Import Mongoose
-mongoose.set('debug', true);
-
-
-/*************** POST Login form ***************/
+/*************** Login form ***************/
 app.use(express.json());
 // ENDPOINT
-app.post('/api/auth/login', (req, res, next) => {//application qui reçoit la requête POST et la réponse de localhost:3000
-    console.log(req.body);
-    res.status(201).json({
-        message: 'Objet créé !'
-    });
-    next();
-});
+// app.post('/api/auth/login', (req, res, next) => {//application qui reçoit la requête POST et la réponse de localhost:3000
+//     console.log(req.body);
+//     res.status(201).json({
+//         message: 'Objet créé !'
+//     });
+//     next();
+// });
+app.use('/api/auth', authRouter);// Create authentification route
 
-// Create authentification route (token ?)
-app.use('/api/auth', registerRouter);
+/*************** SAUCES ***************/
+app.use('/api/sauces', sauceRouter);// Create sauce route
+app.use('/images', express.static(path.join(__dirname, 'images')));// Access to image Url // Need path module from Node
+// POST a new sauce with image
+// const upload = require('./middleware/multer-config')
+// app.post('/api/sauces', upload, (req, res, next) => {
+//     console.log(req.body);
+// });
 
-/*************** CRUD SAUCES = CREATE, READ, UPDATE, DELETE ***************/
-app.use('api/sauces', sauceRouter)
-// POST a new sauce
-app.post('/api/sauces', (req, res, next) => {
-    delete req.body._id;// enlever l'id avant de copier l'objet
-    console.log(req.body);
-    const sauce = new Sauce({
-        ...req.body/// Raccourci pour remplacer tous les types de champs dans Thing.js de type title: req.body.title
-    });
-    sauce.save()// Pour enregistrer l'objet dans la base
-
-    .then(() => res.status(201).json({ message: 'Sauce enregistrée !'}))// Callback qui retourne une promise, et envoyer une res sinon expiration de requête
-    .catch(error => res.status(400).json({ error }));// Callback pour récupérer l'erreur avec code 400 et json avec erreur
-});
-
-// GET All sauce page // Recover all sauces in DB
-app.get('/api/sauces', (req, res, next) => {
-    console.log(req.body)
-    Sauce.find()
-    .then((sauces) => res.status(200).json(sauces))//200 pour GET lorsque le .find est terminé // A stocker dans la variable sauces
-    .catch(error => res.status(400).json({ error }));// Récupérer l'erreur avec code 400 et json avec erreur
-});
+// GET All sauces page // Recover all sauces in DB
+// app.get('/api/sauces', (req, res, next) => {
+//     console.log(req.body)
+//     Sauce.find()
+//     .then((sauces) => res.status(200).json(sauces))//200 pour GET lorsque le .find est terminé // A stocker dans la variable sauces
+//     .catch(error => res.status(400).json({ error }));// Récupérer l'erreur avec code 400 et json avec erreur
+// });
 
 // Recover the unique id sauce (dynamic)
-app.get('/api/sauces/:id', (req, res, next) => {
-    console.log(req.body);
-    Sauce.findOne({ _id: req.params.id })
-    .then(sauce => res.status(200).json(sauce))
-    .catch(error => res.status(404).json({ error }));
-});
-
-// Access to image Url
-app.use('/images', express.static(path.join(__dirname, 'images')));// Need path module from Node
+// app.get('/api/sauces/:id', (req, res, next) => {
+//     console.log(req.body);
+//     Sauce.findOne({ _id: req.params.id })
+//     .then(sauce => res.status(200).json(sauce))
+//     .catch(error => res.status(404).json({ error }));
+// });
 
 // EXPORT app module
 module.exports = app;
