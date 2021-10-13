@@ -21,61 +21,44 @@
  * 400 = 
  * 401 = 
  * 
+ * Commenter le catch si on veut l'erreur en console
+ * 
  * ******************/
 
 // Imports
 const express = require('express');// Express (N.B. body parser included)
-const app = express();
-const dotenv = require('dotenv').config();// dotenv to create environment variables // Utile ici ??????????????????????????????????
-const Sauce = require('./models/SauceModel');// Sauce Model
+const dotenv = require('dotenv');// dotenv to create environment variables
+dotenv.config();// Could be included in above line
 const morgan = require('morgan');// Morgan to have logs about HTTP middleware requests
-app.use(morgan('dev'));
 const authRouter = require('./routes/authRoute');// Registration route
 const sauceRouter = require('./routes/saucesRoute');// Sauce route
-const db = require('./db/db');// Db connexion
 const path = require('path');// Path Node module to have path from images
 const mongoose = require('mongoose');// Mongoose
-mongoose.set('debug', true);// Mongoose debugger
 const cors = require('cors');// Cors to avoid declare headers
+
+/*** Use middlewares and apps config */
+const app = express();
+app.use(express.json());
+app.use(morgan('dev'));
 app.use(cors());
 app.options('*', cors());
 
-/*************** Login form ***************/
-app.use(express.json());
-// ENDPOINT
-// app.post('/api/auth/login', (req, res, next) => {//application qui reçoit la requête POST et la réponse de localhost:3000
-//     console.log(req.body);
-//     res.status(201).json({
-//         message: 'Objet créé !'
-//     });
-//     next();
-// });
+/*********** MongoDb Atlas : agautierbartolo - M0ngodb */
+mongoose.set('debug', true);// Mongoose debugger
+const uri = `${process.env.DB_PROTO}://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_CLUSTER}.${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+mongoose.connect( uri,
+    { useNewUrlParser: true,
+    useUnifiedTopology: true })
+    .then(() => console.log('Connexion à MongoDB réussie !'))
+    .catch(() => console.log('Connexion à MongoDB échouée !')
+);
+
+/*************** AUTHENTIFICATION ***************/
 app.use('/api/auth', authRouter);// Create authentification route
 
 /*************** SAUCES ***************/
 app.use('/api/sauces', sauceRouter);// Create sauce route
 app.use('/images', express.static(path.join(__dirname, 'images')));// Access to image Url // Need path module from Node
-// POST a new sauce with image
-// const upload = require('./middleware/multer-config')
-// app.post('/api/sauces', upload, (req, res, next) => {
-//     console.log(req.body);
-// });
-
-// GET All sauces page // Recover all sauces in DB
-// app.get('/api/sauces', (req, res, next) => {
-//     console.log(req.body)
-//     Sauce.find()
-//     .then((sauces) => res.status(200).json(sauces))//200 pour GET lorsque le .find est terminé // A stocker dans la variable sauces
-//     .catch(error => res.status(400).json({ error }));// Récupérer l'erreur avec code 400 et json avec erreur
-// });
-
-// Recover the unique id sauce (dynamic)
-// app.get('/api/sauces/:id', (req, res, next) => {
-//     console.log(req.body);
-//     Sauce.findOne({ _id: req.params.id })
-//     .then(sauce => res.status(200).json(sauce))
-//     .catch(error => res.status(404).json({ error }));
-// });
 
 // EXPORT app module
 module.exports = app;

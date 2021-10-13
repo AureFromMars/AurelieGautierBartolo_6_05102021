@@ -9,7 +9,7 @@ const authCtrl = require('../controllers/authCtrl');
 const password = require('../middleware/password');
 
 // Route register ENDPOINT
-authRouter.post('/signup', password, authCtrl.register);
+authRouter.post('/signup', password, authCtrl.signup);
 
 // Route login ENDPOINT
 authRouter.post('/login', authCtrl.login);

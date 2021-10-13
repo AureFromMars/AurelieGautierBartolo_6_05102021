@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
         const name = file.originalname.split(' ').join('_'); // Replace spaces with _ // Create a table with filenames
         const extension = MIME_TYPES[file.mimetype];// Apply extension to files uploaded by frontend
         callback(null, name + Date.now() + '.' + extension) // null to verify if there's errors + name + precise timestamp to make an unique filename
-    }
+    }// In ideal case, use sauce_name + sauce_id for the the filename
 });
 
 // EXPORT multer-config module for unique image
