@@ -7,10 +7,19 @@ const multer = require('../middleware/multer-config')
 
 // CRUD ENDPOINT = CREATE, READ, UPDATE, DELETE // Routes for sauces
 sauceRouter.post('/', authMiddleware, multer, sauceCtrl.createSauce);// Multer after auth to authentify before to post
-sauceRouter.put('/:id', authMiddleware, sauceCtrl.modifySauce);
+sauceRouter.put('/:id', authMiddleware, multer, sauceCtrl.modifySauce);
 sauceRouter.delete('/:id', authMiddleware, sauceCtrl.deleteSauce);
 sauceRouter.get('/:id', authMiddleware, sauceCtrl.getOneSauce);
 sauceRouter.get('/', authMiddleware, sauceCtrl.getAllSauces);
+
+
+sauceRouter.get('/', function (req, res) {
+    res.locals.userId = 'GeeksforGeeks';
+    console.log(res.locals);
+    res.end();
+});
+
+
 
 // EXPORT router module
 module.exports = sauceRouter;
