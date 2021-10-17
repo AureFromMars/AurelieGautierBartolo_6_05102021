@@ -11,15 +11,7 @@ sauceRouter.put('/:id', authMiddleware, multer, sauceCtrl.modifySauce);
 sauceRouter.delete('/:id', authMiddleware, sauceCtrl.deleteSauce);
 sauceRouter.get('/:id', authMiddleware, sauceCtrl.getOneSauce);
 sauceRouter.get('/', authMiddleware, sauceCtrl.getAllSauces);
-
-
-sauceRouter.get('/', function (req, res) {
-    res.locals.userId = 'GeeksforGeeks';
-    console.log(res.locals);
-    res.end();
-});
-
-
+sauceRouter.post('/:id/like', authMiddleware, sauceCtrl.likingSauce);
 
 // EXPORT router module
 module.exports = sauceRouter;

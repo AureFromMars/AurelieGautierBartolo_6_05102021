@@ -19,7 +19,7 @@ exports.signup = (req, res, next) => {
             password: hash
         })
         user.save() // Return a promise
-        .then(() => res.status(201).json({ message: 'Utilisateur enregistré !'}))// Callback that returns the promise
+        .then(() => res.status(201).json({ message: "Utilisateur enregistré !"}))// Callback that returns the promise
         .catch(error => res.status(400).json({ error }));// Callback
 
         console.log(user);
@@ -35,19 +35,21 @@ exports.login = (req, res, next) => {
     User.findOne({ email: decryptEmail })// Check if users exists in DB
     .then(user => {
         if (!user) {
-            return res.status(401).json({ error: 'Utilisateur non trouvé !' });
+            return res.status(401).json({ error: "Utilisateur non trouvé !" });
         }
         bcrypt.compare(req.body.password, user.password)// Check
         .then(valid => {
             if (!valid) {
-                return res.status(401).json({ error: 'Mot de passe incorrect !' });
-            }
-            res.status(200).json({
-                userId: user._id,
-                token: jwt.sign(
-                    { userId: user._id }, 'RANDOM_TOKEN_SECRET', { expiresIn: '48h' }
-                )
-            });
+                return res.status(401).json({ error: "Mot de passe incorrect !" });// If...return, then no need to write else because stop the instruction
+            } else {
+                res.status(200).json({
+                    userId: user._id,
+                    token: jwt.sign(
+                        { userId: user._id }, 'RANDOM_TOKEN_SECRET', { expiresIn: '48h' }
+                    ),
+                    message: "Utilisateur connecté !"
+                }).catch(error => res.status(400).json({ error }));
+            };
         })
         .catch(error => res.status(500).json({ error }));
     })

@@ -8,7 +8,11 @@ const sauceSchema = mongoose.Schema({
     mainPepper: { type: String, required: true, trim: true },
     heat: { type: Number, required: true },
     userId: { type: String, required: true, immutable: true },// To disable userId modification
-    imageUrl: { type: String, required: true }
+    imageUrl: { type: String, required: true },
+    likes: { type: Number, default: 0 },
+    dislikes: { type: Number, default: 0 },
+    usersLiked: { type: [String], default: [] },
+    usersDisliked: { type: [String], default: [] }
 });
 
 // EXPORT sauce schema

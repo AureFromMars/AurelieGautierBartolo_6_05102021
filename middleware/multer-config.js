@@ -2,7 +2,7 @@
 const express = require('express')
 
 // Import multer
-const multer = require('multer');// capable de gérer le multipart/form-data
+const multer = require('multer');// Able to manage multipart/form-data
 
 // Types of extensions files
 const MIME_TYPES = {
@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
     filename: (req, file, callback) => {
         const name = file.originalname.split(' ').join('_'); // Replace spaces with _ // Create a table with filenames
         const extension = MIME_TYPES[file.mimetype];// Apply extension to files uploaded by frontend
-        callback(null, name + Date.now() + '.' + extension) // null to verify if there's errors + name + precise timestamp to make an unique filename
+        callback(null, Date.now() + name) // null to verify if there's errors + name + precise timestamp to make an unique filename
     }// In ideal case, use sauce_name + sauce_id for the the filename
 });
 
