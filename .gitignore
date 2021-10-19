@@ -4,9 +4,7 @@
 
 
 ### Spécficiations P6 : Le contenu du dossier images ne doit pas être téléchargé sur GitHub ###
-images/*.jpg
-images/*.jpeg
-images/*.png
+images/*
 
 ### fichiers inutiles
 mongodb-mms-automation-agent-manager_11.6.0.7119-1_amd64.ubuntu1604.deb
