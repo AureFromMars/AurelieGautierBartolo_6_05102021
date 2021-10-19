@@ -35,12 +35,12 @@ exports.login = (req, res, next) => {
     User.findOne({ email: decryptEmail })// Check if users exists in DB
     .then(user => {
         if (!user) {
-            return res.status(401).json({ error: "Utilisateur non trouvé !" });
+            return res.status(401).json({ error });// User not found
         }
         bcrypt.compare(req.body.password, user.password)// Check
         .then(valid => {
             if (!valid) {
-                return res.status(401).json({ error: "Mot de passe incorrect !" });// If...return, then no need to write else because stop the instruction
+                return res.status(401).json({ error });// Password failed // If...return, then no need to write else because stop the instruction
             } else {
                 res.status(200).json({
                     userId: user._id,

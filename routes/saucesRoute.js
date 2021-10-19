@@ -9,8 +9,8 @@ const multer = require('../middleware/multer-config')
 sauceRouter.post('/', authMiddleware, multer, sauceCtrl.createSauce);// Multer after auth to authentify before to post
 sauceRouter.put('/:id', authMiddleware, multer, sauceCtrl.modifySauce);
 sauceRouter.delete('/:id', authMiddleware, sauceCtrl.deleteSauce);
-sauceRouter.get('/:id', authMiddleware, sauceCtrl.getOneSauce);
-sauceRouter.get('/', authMiddleware, sauceCtrl.getAllSauces);
+sauceRouter.get('/:id', sauceCtrl.getOneSauce);
+sauceRouter.get('/', sauceCtrl.getAllSauces);
 sauceRouter.post('/:id/like', authMiddleware, sauceCtrl.likingSauce);
 
 // EXPORT router module

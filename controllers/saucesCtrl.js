@@ -30,34 +30,39 @@ exports.getOneSauce = (req, res, next) => {
 };
 
 exports.modifySauce = (req, res, next) => {
-    const sauceObject = req.file ? {
-        ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
+    if (res.locals.userId === req.params.userId) {// If same userId because rights allows to proprior
+        const sauceObject = req.file ? {
+            ...JSON.parse(req.body.sauce),
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+        } : { ...req.body };
 
-    if (req.file) {
-        Sauce.findOne({ _id: req.params.id})
-        .then(sauce => {
-            const filename = sauce.imageUrl.split('/images/')[1];
-            fs.unlink('images/' + filename, () => {
-                Sauce.updateOne(// .save included in mongoose to persist datas
-                    { _id: req.params.id },
-                    { ...sauceObject, _id: req.params.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` }
-                )
-                .then(() => res.status(200).json({ message: "Sauce modifiée !"}))
-                .catch(error => res.status(400).json({ error }));// Callback error
-                console.log("Image supprimée !")
+        if (req.file) {
+            Sauce.findOne({ _id: req.params.id})
+            .then(sauce => {
+                const filename = sauce.imageUrl.split('/images/')[1];
+                fs.unlink('images/' + filename, () => {
+                    Sauce.updateOne(// .save included in mongoose to persist datas
+                        { _id: req.params.id },
+                        { ...sauceObject, _id: req.params.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` }
+                    )
+                    .then(() => res.status(200).json({ message: "Sauce modifiée !"}))
+                    .catch(error => res.status(400).json({ error }));// Callback error
+                    console.log("Image supprimée !")
+                })
             })
-        })
-        .catch(error => res.status(400).json({ error }));
+            .catch(error => res.status(400).json({ error }));
+        } else {
+            Sauce.updateOne(// Use "await" to avoid double function with above
+                { _id: req.params.id },
+                { ...sauceObject, _id: req.params.id }
+            )
+            .then(() => res.status(200).json({ message: "Sauce modifiée !"}))
+            .catch(error => res.status(400).json({ error }));// Callback error
+        };
     } else {
-        Sauce.updateOne(// Use "await" to avoid double function with above
-            { _id: req.params.id },
-            { ...sauceObject, _id: req.params.id }
-        )
-        .then(() => res.status(200).json({ message: "Sauce modifiée !"}))
+        res.status(403).json({ error })
         .catch(error => res.status(400).json({ error }));// Callback error
-    };
+    }
 };
 
 exports.likingSauce = (req, res, next) => {
@@ -108,7 +113,7 @@ exports.likingSauce = (req, res, next) => {
 
         Sauce.updateOne({ _id: req.params.id }, likingDatas )
         .then(() => res.status(200).json({ message: "Like/Dislike ajouté/modifié !" }))
-        .catch(error => res.status(400).json({ error }));
+        .catch(error => res.status(403).json({ error }));
     })
     .catch(error => res.status(400).json({ error }));
 };
@@ -127,7 +132,7 @@ exports.deleteSauce = (req, res, next) => {
         })
         .catch(error => res.status(400).json({ error }));
     } else {
-        res.status(203).json({ message: "Vous n\'avez pas les autorisations pour supprimer la sauce car vous devez en être le propriétaire !"})
+        res.status(403).json({ message: "Vous n\'avez pas les autorisations pour supprimer la sauce car vous devez en être le propriétaire !"})
         .catch(error => res.status(400).json({ error }));// Callback error
     }
 };

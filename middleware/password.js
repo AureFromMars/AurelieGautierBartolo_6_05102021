@@ -16,8 +16,6 @@ module.exports = (req, res, next) => {
     if(passwordSchema.validate(req.body.password)){
         next();
     } else {
-        return res.status(400).json({
-            error : `Merci de choisir un mot de passe plus fort car il doit contenir : ${passwordSchema.validate(req.body.password, { list: true})} `
-        });
+        return res.status(400).json({ error });
     }
 };

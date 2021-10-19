@@ -5,7 +5,6 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1];
         const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
         req.token = decodedToken;
-        console.log(decodedToken);
 
         const userId = decodedToken.userId;
         if (req.body.userId && req.body.userId !== userId) {
@@ -14,8 +13,6 @@ module.exports = (req, res, next) => {
             next();
         }
     } catch {
-        res.status(401).json({
-            error: new Error("Requête invalide !")
-        });
+        res.status(401).json({ error });
     }
 };

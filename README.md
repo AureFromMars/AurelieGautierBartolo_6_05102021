@@ -111,7 +111,7 @@ N.B. Before NPM5 "--save" was required to save the installed package to package.
 package.json (limiter à ce qui est commun au départ, s'incrémente à chaque ajout de package)
   
 - dot env pour travailler avec les variables d'environnement (globales, pour éviter d'avoir à tout éditer si besoin : URL, mots de passe, id, chemins d'accès aux fichiers, et données sécurisées (token, clés d'API, etc.)) : npm install dot env
-- body-parser pour pouvoir extraire des objets JSON : npm install body-parser
+- body-parser pour pouvoir extraire des objets JSON : npm install body-parser // À partir de la version 4.16 d'Express, bodyparser est inclus !
 - cors pour éviter d'avoir à écrire tous les headers : npm install cors
 - morgan pour logger les requêtes middleware HTTP : npm install morgan
 - bcrypt pour hasher le password : npm install bcrypt
