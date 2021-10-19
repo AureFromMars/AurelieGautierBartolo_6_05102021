@@ -8,6 +8,11 @@ images/*.jpg
 images/*.jpeg
 images/*.png
 
+### fichiers inutiles
+mongodb-mms-automation-agent-manager_11.6.0.7119-1_amd64.ubuntu1604.deb
+package-lock.json
+package.json
+
 ### Linux ###
 *~
 
@@ -135,7 +140,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-.vscode/*
+.vscode/
 
 # yarn v2
 .yarn/cache
