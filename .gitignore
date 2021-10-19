@@ -4,7 +4,9 @@
 
 
 ### Spécficiations P6 : Le contenu du dossier images ne doit pas être téléchargé sur GitHub ###
-images/*
+images/*.jpg
+images/*.jpeg
+images/*.png
 
 ### Linux ###
 *~
@@ -133,7 +135,7 @@ dist
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
-.vscode/
+.vscode/*
 
 # yarn v2
 .yarn/cache
