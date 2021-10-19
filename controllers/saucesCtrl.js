@@ -1,18 +1,18 @@
 // Imports
 const Sauce = require('../models/SauceModel');
 const fs = require('fs');// File system Node module to manager files
-const User = require('../models/AuthModel');// Authentification model
+const User = require('../models/AuthModel');// Authentification model// DELETE ????????????????????????????????????????????????????????????????????????????????
 
-// CRUD Controller for sauces
+// CRUD Controllers = CREATE, READ, UPDATE, DELETE // Controllers for sauces
 
 exports.createSauce = (req, res, next) => {
     const sauceObject = JSON.parse(req.body.sauce);
     delete sauceObject._id;
     const sauce = new Sauce({
-        ...sauceObject,// Raccourci pour remplacer tous les types de champs dans Sauce.js de type title: req.body.title
+        ...sauceObject,// Shortcup to replace all fields in Sauce.js like title: req.body.title
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     });
-    sauce.save()// Pour enregistrer l'objet dans la base
+    sauce.save()// Save object in database
     .then(() => res.status(201).json({ message: "Sauce enregistrée !"}))// Callback that returns the promise
     .catch(error => res.status(400).json({ error }));// Callback error
 };
@@ -40,7 +40,7 @@ exports.modifySauce = (req, res, next) => {
         .then(sauce => {
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink('images/' + filename, () => {
-                Sauce.updateOne(
+                Sauce.updateOne(// .save included in mongoose to persist datas
                     { _id: req.params.id },
                     { ...sauceObject, _id: req.params.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` }
                 )
@@ -51,7 +51,7 @@ exports.modifySauce = (req, res, next) => {
         })
         .catch(error => res.status(400).json({ error }));
     } else {
-        Sauce.updateOne(
+        Sauce.updateOne(// Use "await" to avoid double function with above
             { _id: req.params.id },
             { ...sauceObject, _id: req.params.id }
         )
@@ -71,7 +71,7 @@ exports.likingSauce = (req, res, next) => {
         };
         switch (req.body.like) {
             case -1 :// Dislike case
-                if (likingDatas.usersLiked.includes(req.body.userId)) {// WHAT IS IT BELLOW ????????????????????????????
+                if (likingDatas.usersLiked.includes(req.body.userId)) {
                     const indexUsersLiked = likingDatas.usersLiked.indexOf(req.body.userId);
                     likingDatas.usersLiked.splice(indexUsersLiked, 1)
                 };
@@ -114,16 +114,16 @@ exports.likingSauce = (req, res, next) => {
 };
 
 exports.deleteSauce = (req, res, next) => {
-    if (res.locals.userId === req.params.userId) { // If same userId because rights allows to proprior
+    if (res.locals.userId === req.params.userId) {// If same userId because rights allows to proprior
         Sauce.findOne({ _id: req.params.id})
         .then(sauce => {
             const filename = sauce.imageUrl.split('/images/')[1];
-            console.log("filename : " + filename)
+            console.log("filename : " + filename);
             fs.unlink('images/' + filename, () => {
                 Sauce.deleteOne({ _id: req.params.id })
-                .then(() => res.status(200).json({ message: "Sauce supprimée !"}))// Callback that returns the prom"se
+                .then(() => res.status(200).json({ message: "Sauce supprimée !"}))// Callback that returns the promise
                 .catch(error => res.status(400).json({ error }));// Callback error
-            })
+            });
         })
         .catch(error => res.status(400).json({ error }));
     } else {

@@ -1,30 +1,3 @@
-/******************Récupérer l'application Express
- * Elle contient des fonctions middleware permettant d'utiliser des objets request et response
- * 
- * 4 éléments :
- * 1. enregistre « Requête reçue ! » dans la console et passe l'exécution
- * 2. ajoute un code d'état 201 à la réponse et passe l'exécution
- * 3. envoie la réponse JSON et passe l'exécution
- * 4. enregistre « Réponse envoyée avec succès ! » dans la console
- *  
- * MIDDLEWARE = app.use
- * next();// QUE DANS LE MIDDLEWARE !
- * 
- * 100+ ➡ Information
- * 200+ ➡ Succès
- * 300+ ➡ Redirection
- * 400+ ➡ Erreur client
- * 500+ ➡ Erreur serveur
- * 
- * 200 = 
- * 201 = pour les requêtes de création d'une nouvelle ressource
- * 400 = 
- * 401 = 
- * 
- * Commenter le catch si on veut l'erreur en console
- * 
- * ******************/
-
 // Imports
 const express = require('express');// Express (N.B. body parser included)
 const dotenv = require('dotenv');// dotenv to create environment variables
