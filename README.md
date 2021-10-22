@@ -52,6 +52,7 @@ npm install -g @angular/cli
 ```
 ng serve
 ```
+Ouvrir le site avec l'URL localhost:5500 (voir port de Live Server et plus tard http://localhost:5500)
 
 ## OU BIEN Utilisation du frontend du site PIIQUANTE avec l'extension Live Share de VS Code  
   
@@ -141,8 +142,8 @@ La part VIEW ici est le frontend et la part qui renvoie du JSON au frontend pour
 npm init
 ```
 2. L'application qui configure le démarrage :  : app.js => importation des routes
-3. Les middleware
-4. Les routes => importation des controllers et middlewares  
+3. Les routes => importation des controllers et middlewares
+4. Les middlewares
 5. Les controllers => importation des models  
 6. Les models  
 7. Les variables d'environnement

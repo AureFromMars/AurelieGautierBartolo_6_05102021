@@ -11,7 +11,7 @@ const cors = require('cors');// Cors to avoid declare headers
 
 /*** Use middlewares and apps config */
 const app = express();
-app.use(express.json());
+app.use(express.json());// Replace the use of bodyparser since Express 4.16+
 app.use(morgan('dev'));
 app.use(cors());
 app.options('*', cors());
